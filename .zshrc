@@ -32,10 +32,6 @@ alias tls="tmux ls"
 # Initialize starship
 eval "$(starship init zsh)"
 
-# Initialize fastfetch
-fastfetch
-
-
 function print_centered {
      [[ $# == 0 ]] && return 1
 
