@@ -7,4 +7,9 @@ return {
   filetypes = { "bash", "sh" },
   on_attach = common.on_attach,
   capabilities = capabilities,
+  settings = {
+    bashIde = {
+      shellcheckPath = "shellcheck",
+    },
+  },
 }
