@@ -14,11 +14,16 @@ return {
         css = { "prettier" },
         html = { "prettier" },
         json = { "prettier" },
-        yaml = { "prettier" },
+        -- yaml = { "prettier" },
         markdown = { "prettier" },
         lua = { "stylua" }, -- config file: ~/.stylua.toml
         sh = { "shfmt" },
-        -- python = { "isort", "black" },
+        -- python = { "black" },
+      },
+      formatters = {
+        shfmt = {
+          prepend_args = { "-i", "2" }, -- 4 spaces indentation
+        },
       },
       format_on_save = {
         lsp_fallback = true,
