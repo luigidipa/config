@@ -8,9 +8,9 @@ return {
     conform.setup({
       formatters_by_ft = {
         javascript = { "prettier" },
-        typescript = { "prettier" },
+        -- typescript = { "prettier" },
         javascriptreact = { "prettier" },
-        typescriptreact = { "prettier" },
+        -- typescriptreact = { "prettier" },
         css = { "prettier" },
         html = { "prettier" },
         json = { "prettier" },
@@ -25,11 +25,13 @@ return {
           prepend_args = { "-i", "2" }, -- 4 spaces indentation
         },
       },
-      format_on_save = {
-        lsp_fallback = true,
-        async = false,
-        timeout_ms = 1000,
-      },
+      format_on_save = function(bufnr)
+        local ft = vim.bo[bufnr].filetype
+        if ft == "typescript" or ft == "typescriptreact" then
+          return nil
+        end
+        return { lsp_fallback = true, async = false, timeout_ms = 1000 }
+      end,
     })
 
     vim.keymap.set({ "n", "v" }, "<leader>mp", function()
