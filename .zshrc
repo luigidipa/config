@@ -25,6 +25,12 @@ alias ta="tmux attach -t"
 alias td="tmux detach"
 alias tls="tmux ls"
 
+alias detect-secrets="detect-secrets scan --update .secrets.baseline && detect-secrets audit .secrets.baseline"
+
+function ocl() {
+  oc login "https://api.${1}.cp.fyre.ibm.com:6443" -u kubeadmin -p "${2}" --insecure-skip-tls-verify
+}
+
 # alias cpd-cli="~/bin/cpd-cli-arm64-EE-14.3.1-3056/cpd-cli"
 
 # Initialize starship
