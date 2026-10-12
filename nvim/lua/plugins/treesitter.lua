@@ -18,6 +18,7 @@ return {
         "go",
         "markdown",
         "markdown_inline",
+        "mermaid",
       },
 
       -- Install parsers synchronously (only applied to `ensure_installed`)
