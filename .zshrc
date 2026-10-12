@@ -1,6 +1,10 @@
 autoload -Uz compinit
+if [[ -n $(find "${ZDOTDIR:-$HOME}/.zcompdump" -mtime +1 2>/dev/null) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
-compinit
 # go
 export GOPATH=$HOME/go
 export PATH="$PATH:$HOME/go/bin"
@@ -31,28 +35,42 @@ function ocl() {
   oc login "https://api.${1}.cp.fyre.ibm.com:6443" -u kubeadmin -p "${2}" --insecure-skip-tls-verify
 }
 
-# alias cpd-cli="~/bin/cpd-cli-arm64-EE-14.3.1-3056/cpd-cli"
-
 # Initialize starship
 eval "$(starship init zsh)"
 
+# Pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+eval "$(pyenv init --no-rehash -)"
 eval "$(pyenv virtualenv-init -)"
+
+# Lazy-load NVM
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+load_nvm() {
+  unset -f nvm node npm npx pnpm yarn
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+}
+nvm() { load_nvm; nvm "$@"; }
+node() { load_nvm; node "$@"; }
+npm() { load_nvm; npm "$@"; }
+npx() { load_nvm; npx "$@"; }
+pnpm() { load_nvm; pnpm "$@"; }
+yarn() { load_nvm; yarn "$@"; }
 
-# Commented out because it slows down startup
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-# [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
-source <(kubectl completion zsh)
-
-if [ $commands[oc] ]; then
-  source <(oc completion zsh)
-  compdef _oc oc
+# Lazy-load kubectl & oc completions
+if [ $commands[kubectl] ]; then
+  _kubectl_completion_lazy() {
+    source <(kubectl completion zsh)
+    _kubectl "$@"
+  }
+  compdef _kubectl_completion_lazy kubectl
 fi
 
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+if [ $commands[oc] ]; then
+  _oc_completion_lazy() {
+    source <(oc completion zsh)
+    _oc "$@"
+  }
+  compdef _oc_completion_lazy oc
+fi
