@@ -2,7 +2,81 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 -- Colors & font
-config.color_scheme = "Catppuccin Mocha"
+local mocha = {
+  rosewater = "#f5e0dc",
+  flamingo = "#f2cdcd",
+  pink = "#f5c2e7",
+  mauve = "#cba6f7",
+  red = "#f38ba8",
+  maroon = "#eba0ac",
+  peach = "#fab387",
+  yellow = "#f9e2af",
+  green = "#a6e3a1",
+  teal = "#94e2d5",
+  sky = "#89dceb",
+  sapphire = "#74c7ec",
+  blue = "#89b4fa",
+  lavender = "#b4befe",
+  text = "#cdd6f4",
+  subtext1 = "#bac2de",
+  subtext0 = "#a6adc8",
+  overlay2 = "#9399b2",
+  overlay1 = "#7f849c",
+  overlay0 = "#6c7086",
+  surface2 = "#585b70",
+  surface1 = "#45475a",
+  surface0 = "#313244",
+  base = "#1e1e2e",
+  mantle = "#181825",
+  crust = "#11111b",
+}
+
+config.colors = {
+  foreground = mocha.text,
+  background = mocha.base,
+  cursor_bg = mocha.rosewater,
+  cursor_fg = mocha.crust,
+  cursor_border = mocha.rosewater,
+  selection_fg = mocha.text,
+  selection_bg = mocha.surface2,
+  scrollbar_thumb = mocha.surface2,
+  split = mocha.overlay0,
+
+  ansi = {
+    mocha.surface1, -- black
+    mocha.red, -- red
+    mocha.green, -- green
+    mocha.yellow, -- yellow
+    mocha.blue, -- blue
+    mocha.pink, -- magenta
+    mocha.teal, -- cyan
+    mocha.subtext1, -- white
+  },
+  brights = {
+    mocha.surface2, -- bright black
+    mocha.red, -- bright red
+    mocha.green, -- bright green
+    mocha.yellow, -- bright yellow
+    mocha.blue, -- bright blue
+    mocha.pink, -- bright magenta
+    mocha.teal, -- bright cyan
+    mocha.subtext0, -- bright white
+  },
+  indexed = {
+    [16] = mocha.peach,
+    [17] = mocha.rosewater,
+  },
+
+  tab_bar = {
+    background = mocha.crust,
+    active_tab = { bg_color = mocha.mauve, fg_color = mocha.crust, intensity = "Bold" },
+    inactive_tab = { bg_color = mocha.surface0, fg_color = mocha.subtext0 },
+    inactive_tab_hover = { bg_color = mocha.surface1, fg_color = mocha.text },
+    new_tab = { bg_color = mocha.crust, fg_color = mocha.subtext0 },
+    new_tab_hover = { bg_color = mocha.surface1, fg_color = mocha.text },
+  },
+}
+
 config.font = wezterm.font_with_fallback({ "JetBrainsMono Nerd Font", "Menlo" })
 config.font_size = 14.0
 config.line_height = 1.1
@@ -21,10 +95,10 @@ config.window_close_confirmation = "NeverPrompt"
 config.inactive_pane_hsb = { saturation = 0.9, brightness = 0.7 }
 
 -- Cursor
-config.default_cursor_style = "BlinkingBar"
-config.cursor_blink_rate = 600
-config.cursor_blink_ease_in = "EaseOut"
-config.cursor_blink_ease_out = "EaseOut"
+-- config.default_cursor_style = "BlinkingBar"
+-- config.cursor_blink_rate = 600
+-- config.cursor_blink_ease_in = "EaseOut"
+-- config.cursor_blink_ease_out = "EaseOut"
 
 -- Tab bar
 config.use_fancy_tab_bar = false
@@ -32,21 +106,6 @@ config.tab_bar_at_bottom = false
 config.hide_tab_bar_if_only_one_tab = true
 config.tab_max_width = 32
 config.show_new_tab_button_in_tab_bar = false
-
-local bg = "#1e1e2e"
-local active_bg = "#cba6f7"
-local inactive_bg = "#313244"
-
-config.colors = {
-  tab_bar = {
-    background = "#11111b",
-    active_tab = { bg_color = active_bg, fg_color = bg, intensity = "Bold" },
-    inactive_tab = { bg_color = inactive_bg, fg_color = "#a6adc8" },
-    inactive_tab_hover = { bg_color = "#45475a", fg_color = "#cdd6f4" },
-    new_tab = { bg_color = "#11111b", fg_color = "#a6adc8" },
-    new_tab_hover = { bg_color = "#45475a", fg_color = "#cdd6f4" },
-  },
-}
 
 wezterm.on("format-tab-title", function(tab, _, _, _, hover, max_width)
   local title = tab.tab_title
@@ -57,14 +116,14 @@ wezterm.on("format-tab-title", function(tab, _, _, _, hover, max_width)
 
   local fg, tab_bg
   if tab.is_active then
-    fg, tab_bg = bg, active_bg
+    fg, tab_bg = mocha.crust, mocha.mauve
   elseif hover then
-    fg, tab_bg = "#cdd6f4", "#45475a"
+    fg, tab_bg = mocha.text, mocha.surface1
   else
-    fg, tab_bg = "#a6adc8", inactive_bg
+    fg, tab_bg = mocha.subtext0, mocha.surface0
   end
 
-  local edge = "#11111b"
+  local edge = mocha.crust
   return {
     { Background = { Color = edge } },
     { Foreground = { Color = tab_bg } },
