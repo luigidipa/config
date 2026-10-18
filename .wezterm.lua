@@ -78,7 +78,7 @@ config.colors = {
 }
 
 config.font = wezterm.font_with_fallback({ "JetBrainsMono Nerd Font", "Menlo" })
-config.font_size = 14.0
+config.font_size = 12
 config.line_height = 1.1
 config.harfbuzz_features = { "calt=1", "clig=1", "liga=1" }
 
